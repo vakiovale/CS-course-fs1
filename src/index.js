@@ -2,14 +2,25 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const Statistiikka = ({ palaute }) => {
-    return (
-        <div>
-            <h2>Statistiikka</h2>
-            <Yhteenveto palaute={palaute} />
-            <PalauteKeskiarvo palaute={palaute} />
-            <Positiivinen palaute={palaute} />
-        </div>
-    )
+    const eiPalautetta = palaute.hyva + palaute.neutraali + palaute.huono === 0;
+
+    if(eiPalautetta) {
+        return (
+            <div>
+                <h2>Statistiikka</h2>
+                <p>Ei palautetta</p>
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <h2>Statistiikka</h2>
+                <Yhteenveto palaute={palaute} />
+                <PalauteKeskiarvo palaute={palaute} />
+                <Positiivinen palaute={palaute} />
+            </div>
+        )
+    }
 }
 
 const Yhteenveto = ({ palaute }) => {
@@ -62,19 +73,11 @@ class App extends React.Component {
         }
     }
 
-    hyvaPalaute = () => {
-        this.setState({ hyva: this.state.hyva + 1 });
-        console.log(this.state.hyva);
-    }
-
-    neutraaliPalaute = () => {
-        this.setState({ neutraali: this.state.neutraali + 1 });
-        console.log(this.state.neutraali);
-    }
-
-    huonoPalaute = () => {
-        this.setState({ huono: this.state.huono + 1 });
-        console.log(this.state.huono);
+    annaPalautetta = (palaute) => {
+        return () => {
+            this.setState({ [palaute]: this.state[palaute] + 1 });
+            console.log(this.state[palaute]);
+        }
     }
 
     render() {
@@ -82,9 +85,9 @@ class App extends React.Component {
             <div>
                 <div>
                     <h2>Anna palautetta</h2>
-                    <Button handleClick={this.hyvaPalaute} text="Hyvä" />
-                    <Button handleClick={this.neutraaliPalaute} text="Neutraali" />
-                    <Button handleClick={this.huonoPalaute} text="Huono" />
+                    <Button handleClick={this.annaPalautetta('hyva')} text="Hyvä" />
+                    <Button handleClick={this.annaPalautetta('neutraali')} text="Neutraali" />
+                    <Button handleClick={this.annaPalautetta('huono')} text="Huono" />
                 </div>
                 <Statistiikka palaute={this.state} />
             </div>
