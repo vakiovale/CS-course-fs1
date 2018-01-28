@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom'
 class App extends React.Component {
     constructor(props) {
         super(props)
-            this.state = {
-            selected: 0
+        this.state = {
+            selected: 0,
+            pisteet: [ 0, 0, 0, 0, 0, 0 ]
         }
     }
 
@@ -17,14 +18,37 @@ class App extends React.Component {
         }
     }
 
+    voteAnecdote = () => {
+        return () => {
+            console.log("Voted anecdote ", this.state.selected);
+            const uudetPisteet = this.state.pisteet;
+            uudetPisteet[this.state.selected] = uudetPisteet[this.state.selected] + 1;
+            this.setState({ pisteet: uudetPisteet });
+        }
+    }
+
     render() {
         return (
             <div>
                 <p>{this.props.anecdotes[this.state.selected]}</p>
+                <p>Anecdote has {this.state.pisteet[this.state.selected]} points</p>
+                <Button handleClick={this.voteAnecdote()} text="Vote" />
                 <Button handleClick={this.randomAnecdote()} text="Next anecdote" />
+                <Leaderboard points={this.state.pisteet} />
             </div>
         )
     }
+}
+
+const Leaderboard = ({ points }) => {
+    let bestIndex = points.indexOf(Math.max(...points));
+    return (
+        <div>
+            <h2>Anecdote with most votes:</h2>
+            <p>{anecdotes[bestIndex]}</p>
+            <p>Has {points[bestIndex]} votes</p>
+        </div>
+    )
 }
 
 
