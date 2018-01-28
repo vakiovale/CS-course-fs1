@@ -5,9 +5,41 @@ const Statistiikka = ({ palaute }) => {
     return (
         <div>
             <h2>Statistiikka</h2>
-            <p>hyvä {palaute.hyvaPalaute}</p>
-            <p>neutraali {palaute.neutraaliPalaute}</p>
-            <p>huono {palaute.huonoPalaute}</p>
+            <Yhteenveto palaute={palaute} />
+            <PalauteKeskiarvo palaute={palaute} />
+            <Positiivinen palaute={palaute} />
+        </div>
+    )
+}
+
+const Yhteenveto = ({ palaute }) => {
+    return (
+        <div>
+            <p>hyvä {palaute.hyva}</p>
+            <p>neutraali {palaute.neutraali}</p>
+            <p>huono {palaute.huono}</p>
+        </div>
+    )
+}
+
+const PalauteKeskiarvo = ({ palaute }) => {
+    const keskiarvo = ((palaute.hyva * 1) + (palaute.huono*(-1))) 
+    / (palaute.hyva + palaute.neutraali + palaute.huono);
+    
+    return (
+        <div>
+            <p>keskiarvo {Number(keskiarvo).toFixed(2)}</p>
+        </div>
+    )
+}
+
+const Positiivinen = ({ palaute }) => {
+    const positiivisia = (palaute.hyva) 
+    / (palaute.hyva + palaute.neutraali + palaute.huono);
+
+    return (
+        <div>
+            <p>positiivisia {Number(100 * positiivisia).toFixed(1)} %</p>
         </div>
     )
 }
@@ -24,25 +56,25 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            hyvaPalaute: 0,
-            neutraaliPalaute: 0,
-            huonoPalaute: 0
+            hyva: 0,
+            neutraali: 0,
+            huono: 0
         }
     }
 
     hyvaPalaute = () => {
-        this.setState({ hyvaPalaute: this.state.hyvaPalaute + 1 });
-        console.log(this.state.hyvaPalaute);
+        this.setState({ hyva: this.state.hyva + 1 });
+        console.log(this.state.hyva);
     }
 
     neutraaliPalaute = () => {
-        this.setState({ neutraaliPalaute: this.state.neutraaliPalaute + 1 });
-        console.log(this.state.neutraaliPalaute);
+        this.setState({ neutraali: this.state.neutraali + 1 });
+        console.log(this.state.neutraali);
     }
 
     huonoPalaute = () => {
-        this.setState({ huonoPalaute: this.state.huonoPalaute + 1 });
-        console.log(this.state.huonoPalaute);
+        this.setState({ huono: this.state.huono + 1 });
+        console.log(this.state.huono);
     }
 
     render() {
