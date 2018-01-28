@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Statistiikka = ({ palaute }) => {
+const Statistics = ({ palaute }) => {
     const eiPalautetta = palaute.hyva + palaute.neutraali + palaute.huono === 0;
 
     if(eiPalautetta) {
@@ -15,21 +15,32 @@ const Statistiikka = ({ palaute }) => {
         return (
             <div>
                 <h2>Statistiikka</h2>
-                <Yhteenveto palaute={palaute} />
-                <PalauteKeskiarvo palaute={palaute} />
-                <Positiivinen palaute={palaute} />
+                <table>
+                    <tbody>
+                        <Yhteenveto nimi="Hyvä" palaute={palaute.hyva} />
+                        <Yhteenveto nimi="Neutraali" palaute={palaute.neutraali} />
+                        <Yhteenveto nimi="Huono" palaute={palaute.huono} />
+                        <PalauteKeskiarvo palaute={palaute} />
+                        <Positiivinen palaute={palaute} />
+                    </tbody>
+                </table>
             </div>
         )
     }
 }
 
-const Yhteenveto = ({ palaute }) => {
+const Statistic = ({ nimi, arvo}) => {
     return (
-        <div>
-            <p>hyvä {palaute.hyva}</p>
-            <p>neutraali {palaute.neutraali}</p>
-            <p>huono {palaute.huono}</p>
-        </div>
+        <tr>
+            <td>{nimi}</td>
+            <td>{arvo}</td>
+        </tr>
+    )
+}
+
+const Yhteenveto = ({ nimi, palaute }) => {
+    return (
+        <Statistic nimi={nimi} arvo={palaute} />
     )
 }
 
@@ -38,9 +49,7 @@ const PalauteKeskiarvo = ({ palaute }) => {
     / (palaute.hyva + palaute.neutraali + palaute.huono);
     
     return (
-        <div>
-            <p>keskiarvo {Number(keskiarvo).toFixed(2)}</p>
-        </div>
+        <Statistic nimi="keskiarvo" arvo={Number(keskiarvo).toFixed(2)} />
     )
 }
 
@@ -48,10 +57,10 @@ const Positiivinen = ({ palaute }) => {
     const positiivisia = (palaute.hyva) 
     / (palaute.hyva + palaute.neutraali + palaute.huono);
 
+    const arvo = Number(100 * positiivisia).toFixed(1) + " %";
+
     return (
-        <div>
-            <p>positiivisia {Number(100 * positiivisia).toFixed(1)} %</p>
-        </div>
+        <Statistic nimi="positiivisia" arvo={arvo} />
     )
 }
 
@@ -89,7 +98,7 @@ class App extends React.Component {
                     <Button handleClick={this.annaPalautetta('neutraali')} text="Neutraali" />
                     <Button handleClick={this.annaPalautetta('huono')} text="Huono" />
                 </div>
-                <Statistiikka palaute={this.state} />
+                <Statistics palaute={this.state} />
             </div>
         )
     }
